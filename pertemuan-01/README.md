@@ -1,5 +1,5 @@
 # pertemuan-01
-Nama: [Giselle Anastasia] <br>
+1. Nama: [Giselle Anastasia] <br>
 NIM: [2611500025]<br>
 Kelompok: [TI1A]<br>
 
