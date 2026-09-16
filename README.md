@@ -1,2 +1,7 @@
-# 2611500025-PWD-TI1A-2627O
-Repository latihan pertemuan-1 sampai dengan pertemuan-16 Matakuliah Pemrograman Web dasar Kelompok TI1A Tahun Ajaran 2026/2027 Semester Gasal
+Fungsi: identitas dan gambaran umum repository
+# Pemrograman Web Dasar
+Nama: [Giselle Anastsia]
+NIM: [2611500025]
+Kelompok: [TI1A]
+Tahun Ajaran: 2026/2027 Gasal
+Repository ini digunakan untuk mendokumentasikan perkembangan pembelajaran mata kuliah Pemrograman Web Dasar dari Pertemuan 1 sampai dengan Pertemuan 16.
