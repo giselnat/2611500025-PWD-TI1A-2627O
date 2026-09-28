@@ -23,7 +23,7 @@
 ## Pengujian dan Perbaikan
 - Galat yang ditemukan: [foto yang kebesaran]
 - Penyebab galat: [ukurannya belum diatur]
-- Perbaikan yang dilakukan: [melakukan perbakan ukuran menjadi width="175" dan height ="175"]
+- Perbaikan yang dilakukan: [melakukan perbakan ukuran menjadi width="200"]
 - Hasil pengujian ulang: [foto menjadi terlihat pas dan  rapi]
 
 ## GitHub Pages
