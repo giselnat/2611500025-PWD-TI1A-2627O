@@ -41,14 +41,10 @@ nav a {
   text-decoration: none;
 }
 
-nav a:hover {
-  text-decoration: underline;
-}
-
 /* Main layout */
 main {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
@@ -204,10 +200,4 @@ footer p {
   }
 }
 
-/* Large screens */
-@media (min-width: 1200px) {
-  body {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-}
+
