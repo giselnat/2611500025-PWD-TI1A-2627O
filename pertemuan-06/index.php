@@ -11,6 +11,24 @@
 // Pengujian awal eksekusi PHP.
 echo "PHP berhasil dijalankan.";
 ?>
+
+<?php
+// Komentar satu baris.
+echo "Keluaran menggunakan echo.";
+/*
+Komentar beberapa baris.
+Komentar ini tidak ditampilkan pada halaman.
+*/
+?>
+
+<?php
+// Komentar satu baris.
+print "Keluaran menggunakan print.";
+/*
+Komentar beberapa baris.
+Komentar ini tidak ditampilkan pada halaman.
+*/
+?>
     <header>
         <div class="header-top">
         <h1>Profil Mahasiswa</h1>
