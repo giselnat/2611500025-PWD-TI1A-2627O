@@ -1,6 +1,6 @@
 <?php
 // P6: PHP dasar dan pemrograman sisi peladen
-// Bagian 1: Variabel dan konstanta
+// Bagian 1 : Variabel dan konstanta
 $nim = "0344300002";
 $namaMahasiswa = "Giselle Anastasia";
 $programStudi = "Teknik Informatika";
@@ -9,6 +9,8 @@ $semester = 2;
 $ipk = 3.75;
 $statusAktif = true;
 $catatanTambahan = null;
+const NAMA_MATA_KULIAH = "Pemrograman Web Dasar";
+const PROFIL_GITHUB = "2611500025-bit";
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -19,33 +21,7 @@ $catatanTambahan = null;
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<?php
-// Pengujian awal eksekusi PHP.
-echo "PHP berhasil dijalankan.";
-?>
 
-<?php
-// Komentar satu baris.
-echo "Keluaran menggunakan echo.";
-/*
-Komentar beberapa baris.
-Komentar ini tidak ditampilkan pada halaman.
-*/
-?>
-
-<?php
-// Komentar satu baris.
-print "Keluaran menggunakan print.";
-/*
-Komentar beberapa baris.
-Komentar ini tidak ditampilkan pada halaman.
-*/
-?>
-
-<p>Konten HTML statis.</p>
-<?php
-echo "<p>Konten yang dihasilkan oleh PHP.</p>";
-?>
     <header>
         <div class="header-top">
         <h1>Profil Mahasiswa</h1>
