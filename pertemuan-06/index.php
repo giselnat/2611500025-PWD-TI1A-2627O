@@ -1,3 +1,15 @@
+<?php
+// P6: PHP dasar dan pemrograman sisi peladen
+// Bagian 1: Variabel dan konstanta
+$nim = "0344300002";
+$namaMahasiswa = "Giselle Anastasia";
+$programStudi = "Teknik Informatika";
+$tahunAkademik = "2026/2027";
+$semester = 2;
+$ipk = 3.75;
+$statusAktif = true;
+$catatanTambahan = null;
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
