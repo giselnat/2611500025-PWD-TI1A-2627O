@@ -121,7 +121,18 @@ echo "</li>";
 }
 ?>
 </ol>
-            </article>
+
+<h3>Semester (Perulangan while):</h3>
+<ol>
+<?php
+$nomorSemester = 1;
+while ($nomorSemester <= 3) {
+echo "<li>Semester " . $nomorSemester . "</li>";
+$nomorSemester++; 
+}
+?>
+</ol>
+        </article>
         </section>
 
         <section id="contact">
