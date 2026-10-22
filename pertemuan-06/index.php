@@ -94,6 +94,8 @@ $fokusProgramStudi = "Belum ditentukan";
                 <p>Pemeriksaan rentang semester: <?php echo $statusSemester; ?></p>
                 <p>Saya mahasiswa Program Studi Teknik Informatika.</p>
                 <p>IPK: <?php echo number_format($ipk, 2, ',', '.'); ?></p>
+                <p>Catatan tambahan: <?php echo $catatanTambahan === null ? "Belum ada" : $catatanTambahan;
+?></p>
                 <h3>Target Belajar</h3>
                 <ol>
 <?php
