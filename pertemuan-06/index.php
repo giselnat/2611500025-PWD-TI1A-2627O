@@ -6,7 +6,7 @@ $namaMahasiswa = "Giselle Anastasia";
 $programStudi = "TI";
 $tahunAkademik = "2026/2027";
 $semester = 1;
-$ipk = 3.75;
+$ipk = 0.00;
 $statusAktif = true;
 $catatanTambahan = null;
 const NAMA_MATA_KULIAH = "Pemrograman Web Dasar";
@@ -93,7 +93,7 @@ $fokusProgramStudi = "Belum ditentukan";
                 <p>Semester: <?php echo $semester . " (" . $keteranganSemester . ")"; ?></p>
                 <p>Pemeriksaan rentang semester: <?php echo $statusSemester; ?></p>
                 <p>Saya mahasiswa Program Studi Teknik Informatika.</p>
-
+                <p>IPK: <?php echo number_format($ipk, 2, ',', '.'); ?></p>
                 <h3>Target Belajar</h3>
                 <ol>
 <?php
