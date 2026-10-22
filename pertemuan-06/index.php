@@ -3,7 +3,7 @@
 // Bagian 1 : Variabel dan konstanta
 $nim = "0344300002";
 $namaMahasiswa = "Giselle Anastasia";
-$programStudi = "Teknik Informatika";
+$programStudi = "TI";
 $tahunAkademik = "2026/2027";
 $semester = 1;
 $ipk = 3.75;
@@ -28,6 +28,18 @@ $keteranganSemester = "Semester akhir";
 
 $namaProdi = ($programStudi == "SI") ? "Sistem Informasi" : (($programStudi == "TI") ? "Teknik
 Informatika" : "Lainnya");
+
+// Bagian 4: Percabangan switch-case-default
+switch ($programStudi) {
+case "SI":
+ $fokusProgramStudi = "Sistem Informasi dan proses bisnis";
+break;
+case "TI":
+$fokusProgramStudi = "Komputasi dan pengembangan perangkat lunak";
+break;
+default:
+$fokusProgramStudi = "Belum ditentukan";
+}
 
 ?>
 <!DOCTYPE html>
@@ -75,6 +87,7 @@ Informatika" : "Lainnya");
             <article>
                 <h3>Profil Singkat</h3>
                 <p>Program Studi: <?php echo $namaProdi . " (" . $programStudi . ")"; ?></p>
+                <p>Fokus program studi: <?php echo $fokusProgramStudi; ?></p>
                 <p>Status mahasiswa: <?php echo $statusAktif ? "Aktif" : "Tidak aktif"; ?></p>
                 <p>Sisa semester hingga batas: <?php echo $sisaSemester; ?></p>
                 <p>Semester: <?php echo $semester . " (" . $keteranganSemester . ")"; ?></p>
