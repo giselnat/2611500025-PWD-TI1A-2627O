@@ -9,8 +9,8 @@ if (isset($_POST['nama']) && isset($_POST['email']) && isset($_POST['semester'])
 }   
 // P7: nilai dari session di simpan ke dalam variabel lokal
 $nama = $_SESSION['nama'] ?? '';
-$email = $_SESSION['email'] ?? '';
-$semesterForm = $_SESSION['semester'] ?? '';
+$email = $_POST['email'] ?? '';
+$semesterForm = $_POST['semester'] ?? '';
 $tanggal = $_POST['tanggal'] ?? '';
 $jenisPesan = $_POST['jenis_pesan'] ?? '';
 $prodi = $_POST['prodi'] ?? '';
@@ -224,12 +224,12 @@ Kunjungi
 
                 <div class="form-group">
                     <p>Topik yang Diminati</p>
-                    <input type="checkbox" id="minat-html" name="minat" value="HTML">
+                    <input type="checkbox" id="minat-html" name="minat[]" value="HTML" />
                     <label for="minat-html">HTML</label>
-                    <input type="checkbox" id="minat-css" name="minat" value="CSS">
+                    <input type="checkbox" id="minat-css" name="minat[]" value="CSS" />
                     <label for="minat-css">CSS</label>
                 </div>
-                 
+    
                 <div class="form-group">
                     <label for="prodi">Program Studi</label><br>
                     <select class="input-form" id="prodi" name="prodi" required>
