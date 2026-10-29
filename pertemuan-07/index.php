@@ -1,8 +1,20 @@
 <?php
-// P7 : menangkap nilai dar input form 
-echo $_POST["nama"];
-echo $_POST["email"];
-echo $_POST["semester"];
+session_start();
+// P7 : menangkap nilai dar input form, disimpan ke session
+$nama = $_SESSION["nama"] ?? "";
+$email = $_SESSION["email"] ?? "";
+$semesterForm = $_SESSION["semester"] ?? "";
+
+if (isset($_POST['nama']) && isset($_POST['email']) && isset($_POST['semester'])) {
+$_SESSION["nama"] = $_POST["nama"];
+$_SESSION["email"] = $_POST["email"];
+$_SESSION["semester"] = $_POST["semester"];
+// P7 : nilai dari session dsimpan ke dalam variabel lokal 
+$nama = $_SESSION["nama"];
+$email = $_SESSION['email'];
+ $semesterForm = $_SESSION["semester"];
+}
+
 // P6: PHP dasar dan pemrograman sisi peladen
 // Bagian 1 : Variabel dan konstanta
 $nim = "0344300002";
@@ -158,6 +170,7 @@ Kunjungi
                            placeholder="Masukkan nama lengkap"
                            minlength="3"
                            maxlength="50"
+                           value="<?php echo htmlspecialchars($nama, ENT_QUOTES, 'UTF-8'); ?>"
                            required>
                 </div>
 
@@ -168,6 +181,7 @@ Kunjungi
                            id="email"
                            name="email"
                            placeholder="nama@email.com"
+                           value="<?php echo htmlspecialchars($email, ENT_QUOTES, 'UTF-8'); ?>"
                            required>
                 </div>
 
@@ -179,6 +193,7 @@ Kunjungi
                            name="semester"
                            min="1"
                            max="14"
+                           value="<?php echo htmlspecialchars((string) $semesterForm, ENT_QUOTES, 'UTF-8'); ?>"
                            required>
                 </div>
 
