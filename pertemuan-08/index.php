@@ -1,6 +1,17 @@
 <?php
 session_start();
 
+$errors = $_SESSION['errors'] ?? [];
+$old_input = $_SESSION['old_input'] ?? [];
+$rkm_list = $_SESSION['rkm_list'] ?? [];
+
+// Hapus data temporary setelah diambil (flash session)
+unset($_SESSION['errors'], $_SESSION['old_input']);
+?>
+
+<?php
+session_start();
+
 // P7: Memproses data formulir dan menyimpannya ke dalam session.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	$nama = trim((string) ($_POST["nama"] ?? ""));
