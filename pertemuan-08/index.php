@@ -1,14 +1,80 @@
 <?php
 session_start();
 
-$errors = $_SESSION['errors'] ?? [];
-$old_input = $_SESSION['old_input'] ?? [];
-$rkm_list = $_SESSION['rkm_list'] ?? [];
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: index.php');
+    exit;
+}
 
-// Hapus data temporary setelah diambil (flash session)
-unset($_SESSION['errors'], $_SESSION['old_input']);
-?>
+// 1. Normalisasi / Sanitasi Masukan Context-Aware
+$nama_kegiatan = trim($_POST['nama_kegiatan'] ?? '');
+$kategori      = trim($_POST['kategori'] ?? '');
+$tanggal       = trim($_POST['tanggal'] ?? '');
+$lokasi        = trim($_POST['lokasi'] ?? '');
+$deskripsi     = trim($_POST['deskripsi'] ?? '');
 
+$errors = [];
+
+// 2. Validasi Sisi Peladen (Server-Side)
+if (empty($nama_kegiatan)) {
+    $errors[] = "Nama kegiatan wajib diisi.";
+} elseif (mb_strlen($nama_kegiatan) < 3) {
+    $errors[] = "Nama kegiatan minimal 3 karakter.";
+}
+
+$kategori_valid = ['Akademik', 'Organisasi', 'Pengabdian', 'Lomba'];
+if (empty($kategori)) {
+    $errors[] = "Kategori kegiatan wajib dipilih.";
+} elseif (!in_array($kategori, $kategori_valid, true)) {
+    $errors[] = "Kategori kegiatan tidak valid.";
+}
+
+if (empty($tanggal)) {
+    $errors[] = "Tanggal pelaksanaan wajib diisi.";
+} else {
+    $d = DateTime::createFromFormat('Y-m-d', $tanggal);
+    if (!($d && $d->format('Y-m-d') === $tanggal)) {
+        $errors[] = "Format tanggal tidak valid.";
+    }
+}
+
+if (empty($lokasi)) {
+    $errors[] = "Lokasi kegiatan wajib diisi.";
+}
+
+if (empty($deskripsi)) {
+    $errors[] = "Deskripsi kegiatan wajib diisi.";
+} elseif (mb_strlen($deskripsi) < 10) {
+    $errors[] = "Deskripsi kegiatan minimal 10 karakter.";
+}
+
+// 3. Implementasi Pola Post-Redirect-Get (PRG)
+if (!empty($errors)) {
+    $_SESSION['errors'] = $errors;
+    $_SESSION['old_input'] = [
+        'nama_kegiatan' => $nama_kegiatan,
+        'kategori'      => $kategori,
+        'tanggal'       => $tanggal,
+        'lokasi'        => $lokasi,
+        'deskripsi'     => $deskripsi
+    ];
+} else {
+    if (!isset($_SESSION['rkm_list'])) {
+        $_SESSION['rkm_list'] = [];
+    }
+
+    $_SESSION['rkm_list'][] = [
+        'nama_kegiatan' => $nama_kegiatan,
+        'kategori'      => $kategori,
+        'tanggal'       => $tanggal,
+        'lokasi'        => $lokasi,
+        'deskripsi'     => $deskripsi
+    ];
+}
+
+// Redirect kembali ke index.php pada section RKM (Pola PRG)
+header('Location: index.php#rkm');
+exit;
 
 <?php
 session_start();
