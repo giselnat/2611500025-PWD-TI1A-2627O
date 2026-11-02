@@ -9,6 +9,7 @@ $rkm_list = $_SESSION['rkm_list'] ?? [];
 unset($_SESSION['errors'], $_SESSION['old_input']);
 ?>
 
+
 <?php
 session_start();
 
@@ -96,7 +97,6 @@ switch ($programStudi) {
 	<title>Profil Mahasiswa</title>
 	<link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 	<header>
 		<div class="header-top">
