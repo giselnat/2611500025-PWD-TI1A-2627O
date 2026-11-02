@@ -445,6 +445,54 @@ switch ($programStudi) {
 		<p>&copy; <?= date("Y") ?> <?php echo $namaMahasiswa; ?> [<?= $nim ?>]</p>
 	</footer>
 	<script src="script.js"></script>
+
+	<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form-rencana-kegiatan');
+    const errorBox = document.getElementById('js-error-message');
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            let errors = [];
+
+            // Regresi data input
+            const nama = document.getElementById('nama_kegiatan').value.trim();
+            const kategori = document.getElementById('kategori_kegiatan').value;
+            const tanggal = document.getElementById('tanggal_pelaksanaan').value;
+            const lokasi = document.getElementById('lokasi_kegiatan').value.trim();
+            const deskripsi = document.getElementById('deskripsi_kegiatan').value.trim();
+
+            // Validasi input kosong
+            if (nama === '') {
+                errors.push('Nama Kegiatan wajib diisi.');
+            }
+            if (kategori === '') {
+                errors.push('Kategori Kegiatan wajib dipilih.');
+            }
+            if (tanggal === '') {
+                errors.push('Tanggal Pelaksanaan wajib diisi.');
+            }
+            if (lokasi === '') {
+                errors.push('Lokasi Kegiatan wajib diisi.');
+            }
+            if (deskripsi === '') {
+                errors.push('Deskripsi Kegiatan wajib diisi.');
+            }
+
+            // Tampilkan error jika validasi JS gagal
+            if (errors.length > 0) {
+                e.preventDefault(); // Batalkan pengiriman form
+                errorBox.style.display = 'block';
+                errorBox.innerHTML = '<ul style="margin:0; padding-left:20px;">' + 
+                    errors.map(err => `<li>${err}</li>`).join('') + 
+                    '</ul>';
+            } else {
+                errorBox.style.display = 'none';
+            }
+        });
+    }
+});
+</script>
 </body>
 
 </html>
