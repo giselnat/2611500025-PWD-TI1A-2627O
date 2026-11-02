@@ -1,113 +1,159 @@
 <?php
 session_start();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: index.php');
-    exit;
+function escape($value)
+{
+	return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
 }
 
-// 1. Normalisasi / Sanitasi Masukan Context-Aware
-$nama_kegiatan = trim($_POST['nama_kegiatan'] ?? '');
-$kategori      = trim($_POST['kategori'] ?? '');
-$tanggal       = trim($_POST['tanggal'] ?? '');
-$lokasi        = trim($_POST['lokasi'] ?? '');
-$deskripsi     = trim($_POST['deskripsi'] ?? '');
-
-$errors = [];
-
-// 2. Validasi Sisi Peladen (Server-Side)
-if (empty($nama_kegiatan)) {
-    $errors[] = "Nama kegiatan wajib diisi.";
-} elseif (mb_strlen($nama_kegiatan) < 3) {
-    $errors[] = "Nama kegiatan minimal 3 karakter.";
+function postString($key)
+{
+	return isset($_POST[$key]) && is_string($_POST[$key]) ? trim($_POST[$key]) : "";
 }
 
-$kategori_valid = ['Akademik', 'Organisasi', 'Pengabdian', 'Lomba'];
-if (empty($kategori)) {
-    $errors[] = "Kategori kegiatan wajib dipilih.";
-} elseif (!in_array($kategori, $kategori_valid, true)) {
-    $errors[] = "Kategori kegiatan tidak valid.";
+function validDate($value)
+{
+	$date = DateTime::createFromFormat("!Y-m-d", $value);
+	return $date !== false && $date->format("Y-m-d") === $value;
 }
 
-if (empty($tanggal)) {
-    $errors[] = "Tanggal pelaksanaan wajib diisi.";
-} else {
-    $d = DateTime::createFromFormat('Y-m-d', $tanggal);
-    if (!($d && $d->format('Y-m-d') === $tanggal)) {
-        $errors[] = "Format tanggal tidak valid.";
-    }
-}
-
-if (empty($lokasi)) {
-    $errors[] = "Lokasi kegiatan wajib diisi.";
-}
-
-if (empty($deskripsi)) {
-    $errors[] = "Deskripsi kegiatan wajib diisi.";
-} elseif (mb_strlen($deskripsi) < 10) {
-    $errors[] = "Deskripsi kegiatan minimal 10 karakter.";
-}
-
-// 3. Implementasi Pola Post-Redirect-Get (PRG)
-if (!empty($errors)) {
-    $_SESSION['errors'] = $errors;
-    $_SESSION['old_input'] = [
-        'nama_kegiatan' => $nama_kegiatan,
-        'kategori'      => $kategori,
-        'tanggal'       => $tanggal,
-        'lokasi'        => $lokasi,
-        'deskripsi'     => $deskripsi
-    ];
-} else {
-    if (!isset($_SESSION['rkm_list'])) {
-        $_SESSION['rkm_list'] = [];
-    }
-
-    $_SESSION['rkm_list'][] = [
-        'nama_kegiatan' => $nama_kegiatan,
-        'kategori'      => $kategori,
-        'tanggal'       => $tanggal,
-        'lokasi'        => $lokasi,
-        'deskripsi'     => $deskripsi
-    ];
-}
-
-// Redirect kembali ke index.php pada section RKM (Pola PRG)
-header('Location: index.php#rkm');
-exit;
-
-<?php
-session_start();
-
-// P7: Memproses data formulir dan menyimpannya ke dalam session.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-	$nama = trim((string) ($_POST["nama"] ?? ""));
-	$email = trim((string) ($_POST["email"] ?? ""));
-	$semesterForm = trim((string) ($_POST["semester"] ?? ""));
-	$tanggal = trim((string) ($_POST["tanggal"] ?? ""));
-	$jenisPesan = trim((string) ($_POST["jenis_pesan"] ?? ""));
-	$minat = $_POST["minat"] ?? [];
-	$prodi = trim((string) ($_POST["prodi"] ?? ""));
-	$pesan = trim((string) ($_POST["pesan"] ?? ""));
+	$formType = postString("form_type");
 
-	// Checkbox dapat mengirimkan lebih dari satu nilai.
-	if (!is_array($minat)) {
-		$minat = [];
+	if ($formType === "rencana") {
+		$activity = [
+			"nama_kegiatan" => postString("nama_kegiatan"),
+			"kategori_kegiatan" => postString("kategori_kegiatan"),
+			"tanggal_pelaksanaan" => postString("tanggal_pelaksanaan"),
+			"lokasi_kegiatan" => postString("lokasi_kegiatan"),
+			"deskripsi_kegiatan" => postString("deskripsi_kegiatan"),
+		];
+		$errors = [];
+		$categories = ["Akademik", "Organisasi", "Olahraga", "Seni & Budaya", "Pengabdian Masyarakat"];
+
+		if (mb_strlen($activity["nama_kegiatan"]) < 3) {
+			$errors[] = "Nama kegiatan minimal 3 karakter.";
+		}
+		if (!in_array($activity["kategori_kegiatan"], $categories, true)) {
+			$errors[] = "Pilih kategori kegiatan yang valid.";
+		}
+		if (!validDate($activity["tanggal_pelaksanaan"])) {
+			$errors[] = "Tanggal pelaksanaan tidak valid.";
+		}
+		if ($activity["lokasi_kegiatan"] === "") {
+			$errors[] = "Lokasi kegiatan wajib diisi.";
+		}
+		if (mb_strlen($activity["deskripsi_kegiatan"]) < 10) {
+			$errors[] = "Deskripsi kegiatan minimal 10 karakter.";
+		}
+
+		if ($errors) {
+			$_SESSION["rkm_errors"] = $errors;
+			$_SESSION["rkm_old_input"] = $activity;
+		} else {
+			$_SESSION["rkm_list"] ??= [];
+			$_SESSION["rkm_list"][] = $activity;
+			unset($_SESSION["rkm_errors"], $_SESSION["rkm_old_input"]);
+		}
+
+		header("Location: index.php#rencana-kegiatan");
+		exit;
 	}
 
-	// Menyimpan setiap nilai formulir ke dalam session secara terpisah.
-	$_SESSION["nama"] = $nama;
-	$_SESSION["email"] = $email;
-	$_SESSION["semester"] = $semesterForm;
-	$_SESSION["tanggal"] = $tanggal;
-	$_SESSION["jenis_pesan"] = $jenisPesan;
-	$_SESSION["minat"] = $minat;
-	$_SESSION["prodi"] = $prodi;
-	$_SESSION["pesan"] = $pesan;
+	if ($formType === "contact") {
+		$interests = $_POST["minat"] ?? [];
+		if (!is_array($interests)) {
+			$interests = [];
+		}
+		$contact = [
+			"nama" => postString("nama"),
+			"email" => postString("email"),
+			"semester" => postString("semester"),
+			"tanggal" => postString("tanggal"),
+			"jenis_pesan" => postString("jenis_pesan"),
+			"minat" => array_values(array_filter($interests, "is_string")),
+			"prodi" => postString("prodi"),
+			"pesan" => postString("pesan"),
+		];
+		$errors = [];
 
-	// PRG: mencegah pengiriman POST berulang ketika halaman dimuat ulang.
-	header("Location: index.php#contact");
+		if (mb_strlen($contact["nama"]) < 3 || mb_strlen($contact["nama"]) > 50) {
+			$errors[] = "Nama lengkap harus diisi 3 sampai 50 karakter.";
+		}
+		if (!filter_var($contact["email"], FILTER_VALIDATE_EMAIL)) {
+			$errors[] = "Masukkan alamat email yang valid.";
+		}
+		if (filter_var($contact["semester"], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 14]]) === false) {
+			$errors[] = "Semester harus diisi dengan angka 1 sampai 14.";
+		}
+		if (!validDate($contact["tanggal"])) {
+			$errors[] = "Tanggal kunjungan tidak valid.";
+		}
+		if (!in_array($contact["jenis_pesan"], ["pertanyaan", "saran"], true)) {
+			$errors[] = "Pilih jenis pesan yang valid.";
+		}
+		$contact["minat"] = array_values(array_intersect($contact["minat"], ["HTML", "CSS"]));
+		if (!$contact["minat"]) {
+			$errors[] = "Pilih minimal satu topik yang diminati.";
+		}
+		if (!in_array($contact["prodi"], ["SI", "TI"], true)) {
+			$errors[] = "Pilih program studi yang valid.";
+		}
+		if (mb_strlen($contact["pesan"]) < 1 || mb_strlen($contact["pesan"]) > 300) {
+			$errors[] = "Pesan harus diisi dan maksimal 300 karakter.";
+		}
+
+		if ($errors) {
+			$_SESSION["contact_errors"] = $errors;
+			$_SESSION["contact_old_input"] = $contact;
+		} else {
+			$_SESSION["contact_data"] = $contact;
+			$_SESSION["nama"] = $contact["nama"];
+			$_SESSION["email"] = $contact["email"];
+			$_SESSION["semester"] = $contact["semester"];
+			$_SESSION["tanggal"] = $contact["tanggal"];
+			$_SESSION["jenis_pesan"] = $contact["jenis_pesan"];
+			$_SESSION["minat"] = $contact["minat"];
+			$_SESSION["prodi"] = $contact["prodi"];
+			$_SESSION["pesan"] = $contact["pesan"];
+			unset($_SESSION["contact_errors"], $_SESSION["contact_old_input"]);
+		}
+
+		header("Location: index.php#contact");
+		exit;
+	}
+
+	$_SESSION["form_errors"] = ["Formulir tidak dikenal."];
+	header("Location: index.php");
 	exit;
+}
+
+$rkmErrors = $_SESSION["rkm_errors"] ?? [];
+$rkmOldInput = $_SESSION["rkm_old_input"] ?? [];
+$contactErrors = $_SESSION["contact_errors"] ?? [];
+$contactOldInput = $_SESSION["contact_old_input"] ?? [];
+$formErrors = $_SESSION["form_errors"] ?? [];
+unset(
+	$_SESSION["rkm_errors"],
+	$_SESSION["rkm_old_input"],
+	$_SESSION["contact_errors"],
+	$_SESSION["contact_old_input"],
+	$_SESSION["form_errors"]
+);
+$rkmList = $_SESSION["rkm_list"] ?? [];
+$contactData = $_SESSION["contact_data"] ?? null;
+if (!$contactData && isset($_SESSION["nama"])) {
+	$contactData = [
+		"nama" => $_SESSION["nama"],
+		"email" => $_SESSION["email"] ?? "",
+		"semester" => $_SESSION["semester"] ?? "",
+		"tanggal" => $_SESSION["tanggal"] ?? "",
+		"jenis_pesan" => $_SESSION["jenis_pesan"] ?? "",
+		"minat" => $_SESSION["minat"] ?? [],
+		"prodi" => $_SESSION["prodi"] ?? "",
+		"pesan" => $_SESSION["pesan"] ?? "",
+	];
+	$contactData["minat"] = is_array($contactData["minat"]) ? $contactData["minat"] : [];
 }
 
 // Mengamankan data sebelum ditampilkan kembali ke halaman HTML.
@@ -194,25 +240,6 @@ switch ($programStudi) {
 			<h2>Selamat Datang</h2>
 			<p>Halo, saya <strong><?php echo $namaMahasiswa; ?></strong>. Saya sedang mempelajari matakuliah <strong><?php print NAMA_MATA_KULIAH; ?></strong> pada tahun akademik <?php echo $tahunAkademik; ?>.</p>
 
-			<main>
-    <section id="home">
-      <h1>Selamat Datang</h1>
-    </section>
-
-    <!-- SECTION BARU SEBAGAI TARGET NAVIGASI -->
-    <section id="rencana-kegiatan">
-      <h2>Rencana Kegiatan</h2>
-      <p>Berikut adalah daftar agenda kegiatan kami:</p>
-      <ul>
-        <li>Pelatihan Pemrograman Web</li>
-        <li>Workshop Versi Git & GitHub</li>
-        <li>Evaluasi Proyek Akhir</li>
-      </ul>
-    </section>
-  </main>
-
-</body>
-</html>
 			<img src="img/foto-profil.jpg" alt="Foto profil Nama Mahasiswa" />
 		</section>
 
@@ -271,79 +298,97 @@ switch ($programStudi) {
 			</article>
 		</section>
 
-		<section id="rencana-kegiatan" class="contact section">
-  <div class="container section-title" data-aos="fade-up">
-    <h2>Rencana Kegiatan Mahasiswa</h2>
-    <p>Silakan isi formulir di bawah ini untuk mengajukan rencana kegiatan mahasiswa baru.</p>
-  </div>
+		<section id="rencana-kegiatan" class="section-box">
+			<h2>Rencana Kegiatan Mahasiswa</h2>
+			<p>Isi formulir berikut untuk mengajukan rencana kegiatan mahasiswa.</p>
 
-  <div class="container" data-aos="fade-up" data-aos-delay="100">
-    <div class="row gy-4 justify-content-center">
-      <div class="col-lg-8">
-        
-        <form action="index.php#rencana-kegiatan" method="POST" role="form" class="php-email-form">
-          <div class="row gy-4">
+			<?php if ($rkmErrors): ?>
+				<div class="form-feedback-error" role="alert">
+					<ul>
+						<?php foreach ($rkmErrors as $error): ?>
+							<li><?= escape($error) ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
 
-            <!-- 1. Input Nama Kegiatan -->
-            <div class="col-md-6 form-group">
-              <label for="nama_kegiatan" class="form-label">Nama Kegiatan</label>
-              <input type="text" name="nama_kegiatan" id="nama_kegiatan" class="form-control" placeholder="Masukkan nama kegiatan" required>
-            </div>
+			<form id="form-rencana-kegiatan" action="index.php#rencana-kegiatan" method="post" data-validation="rencana" novalidate>
+				<input type="hidden" name="form_type" value="rencana">
+				<div class="form-group">
+					<label for="nama_kegiatan">Nama Kegiatan</label>
+					<input class="input-form" type="text" name="nama_kegiatan" id="nama_kegiatan" minlength="3" required value="<?= escape($rkmOldInput["nama_kegiatan"] ?? "") ?>">
+				</div>
+				<div class="form-group">
+					<label for="kategori_kegiatan">Kategori Kegiatan</label>
+					<select class="input-form" name="kategori_kegiatan" id="kategori_kegiatan" required>
+						<option value="">-- Pilih Kategori --</option>
+						<?php foreach (["Akademik", "Organisasi", "Olahraga", "Seni & Budaya", "Pengabdian Masyarakat"] as $category): ?>
+							<option value="<?= escape($category) ?>" <?= ($rkmOldInput["kategori_kegiatan"] ?? "") === $category ? "selected" : "" ?>><?= escape($category) ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="tanggal_pelaksanaan">Tanggal Pelaksanaan</label>
+					<input class="input-form" type="date" name="tanggal_pelaksanaan" id="tanggal_pelaksanaan" required value="<?= escape($rkmOldInput["tanggal_pelaksanaan"] ?? "") ?>">
+				</div>
+				<div class="form-group">
+					<label for="lokasi_kegiatan">Lokasi Kegiatan</label>
+					<input class="input-form" type="text" name="lokasi_kegiatan" id="lokasi_kegiatan" required value="<?= escape($rkmOldInput["lokasi_kegiatan"] ?? "") ?>">
+				</div>
+				<div class="form-group">
+					<label for="deskripsi_kegiatan">Deskripsi Kegiatan</label>
+					<textarea class="input-form" name="deskripsi_kegiatan" id="deskripsi_kegiatan" rows="5" minlength="10" required><?= escape($rkmOldInput["deskripsi_kegiatan"] ?? "") ?></textarea>
+				</div>
+				<p id="js-error-message" class="form-feedback" aria-live="polite"></p>
+				<button type="submit">Kirim Rencana</button>
+				<button type="reset">Batal</button>
+			</form>
 
-            <!-- 2. Input Kategori Kegiatan -->
-            <div class="col-md-6 form-group">
-              <label for="kategori_kegiatan" class="form-label">Kategori Kegiatan</label>
-              <select name="kategori_kegiatan" id="kategori_kegiatan" class="form-select" required>
-                <option value="" disabled selected>-- Pilih Kategori --</option>
-                <option value="Akademik">Akademik</option>
-                <option value="Organisasi">Organisasi</option>
-                <option value="Olahraga">Olahraga</option>
-                <option value="Seni & Budaya">Seni & Budaya</option>
-                <option value="Pengabdian Masyarakat">Pengabdian Masyarakat</option>
-              </select>
-            </div>
-
-            <!-- 3. Input Tanggal Pelaksanaan -->
-            <div class="col-md-6 form-group">
-              <label for="tanggal_pelaksanaan" class="form-label">Tanggal Pelaksanaan</label>
-              <input type="date" name="tanggal_pelaksanaan" id="tanggal_pelaksanaan" class="form-control" required>
-            </div>
-
-            <!-- 4. Input Lokasi Kegiatan -->
-            <div class="col-md-6 form-group">
-              <label for="lokasi_kegiatan" class="form-label">Lokasi Kegiatan</label>
-              <input type="text" name="lokasi_kegiatan" id="lokasi_kegiatan" class="form-control" placeholder="Masukkan lokasi kegiatan" required>
-            </div>
-
-            <!-- 5. Input Deskripsi Kegiatan -->
-            <div class="col-md-12 form-group">
-              <label for="deskripsi_kegiatan" class="form-label">Deskripsi Kegiatan</label>
-              <textarea name="deskripsi_kegiatan" id="deskripsi_kegiatan" class="form-control" rows="5" placeholder="Tuliskan deskripsi ringkas mengenai kegiatan" required></textarea>
-            </div>
-
-            <!-- Tombol Kirim & Batal -->
-            <div class="col-md-12 text-center mt-4">
-              <button type="submit" name="submit_rencana" class="btn btn-primary px-4 me-2">Kirim</button>
-              <button type="reset" class="btn btn-secondary px-4">Batal</button>
-            </div>
-
-          </div>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</section>
+			<h3>Daftar Rencana Kegiatan</h3>
+			<?php if (!$rkmList): ?>
+				<p>Belum ada rencana kegiatan yang dikirim.</p>
+			<?php else: ?>
+				<div class="submission-result">
+					<?php foreach ($rkmList as $index => $activity): ?>
+						<article>
+							<h4><?= escape($activity["nama_kegiatan"]) ?></h4>
+							<p><strong>Kategori:</strong> <?= escape($activity["kategori_kegiatan"]) ?></p>
+							<p><strong>Tanggal:</strong> <?= escape($activity["tanggal_pelaksanaan"]) ?></p>
+							<p><strong>Lokasi:</strong> <?= escape($activity["lokasi_kegiatan"]) ?></p>
+							<p><strong>Deskripsi:</strong> <?= nl2br(escape($activity["deskripsi_kegiatan"])) ?></p>
+						</article>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
+		</section>
 
 		<section id="contact">
 			<h2>Kontak</h2>
+			<?php if ($formErrors): ?>
+				<div class="form-feedback-error" role="alert">
+					<?php foreach ($formErrors as $error): ?>
+						<p><?= escape($error) ?></p>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 
 			<p>
 				Kunjungi
 				<a target="_blank" href="https://github.com/<?= PROFIL_GITHUB ?>">profil GitHub saya</a>.
 			</p>
 
-			<form id="contactForm" class="js-contact-form" data-validation="contact" action="index.php" method="post" novalidate>
+			<?php if ($contactErrors): ?>
+				<div class="form-feedback-error" role="alert">
+					<ul>
+						<?php foreach ($contactErrors as $error): ?>
+							<li><?= escape($error) ?></li>
+						<?php endforeach; ?>
+					</ul>
+				</div>
+			<?php endif; ?>
+
+			<form id="contactForm" class="js-contact-form" data-validation="contact" action="index.php#contact" method="post" novalidate>
+				<input type="hidden" name="form_type" value="contact">
 				<div class="form-group">
 					<label for="nama">Nama Lengkap</label><br />
 
@@ -355,44 +400,45 @@ switch ($programStudi) {
 						placeholder="Masukkan nama lengkap"
 						minlength="3"
 						maxlength="50"
-						required />
+						required
+						value="<?= escape($contactOldInput["nama"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<label for="email">Email</label><br />
 
-					<input class="input-form" type="email" id="email" name="email" placeholder="nama@email.com" required />
+					<input class="input-form" type="email" id="email" name="email" placeholder="nama@email.com" required value="<?= escape($contactOldInput["email"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<label for="semester">Semester</label><br />
 
-					<input class="input-form" type="number" id="semester" name="semester" min="1" max="14" required />
+					<input class="input-form" type="number" id="semester" name="semester" min="1" max="14" required value="<?= escape($contactOldInput["semester"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<label for="tanggal">Tanggal Kunjungan</label><br />
 
-					<input class="input-form" type="date" id="tanggal" name="tanggal" required />
+					<input class="input-form" type="date" id="tanggal" name="tanggal" required value="<?= escape($contactOldInput["tanggal"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<p>Jenis Pesan</p>
 
-					<input type="radio" id="pertanyaan" name="jenis_pesan" value="pertanyaan" required />
+					<input type="radio" id="pertanyaan" name="jenis_pesan" value="pertanyaan" required <?= ($contactOldInput["jenis_pesan"] ?? "") === "pertanyaan" ? "checked" : "" ?> />
 					<label for="pertanyaan">Pertanyaan</label>
 
-					<input type="radio" id="saran" name="jenis_pesan" value="saran" />
+					<input type="radio" id="saran" name="jenis_pesan" value="saran" <?= ($contactOldInput["jenis_pesan"] ?? "") === "saran" ? "checked" : "" ?> />
 					<label for="saran">Saran</label>
 				</div>
 
 				<div class="form-group">
 					<p>Topik yang Diminati</p>
 
-					<input type="checkbox" id="minat-html" name="minat[]" value="HTML" />
+					<input type="checkbox" id="minat-html" name="minat[]" value="HTML" <?= in_array("HTML", $contactOldInput["minat"] ?? [], true) ? "checked" : "" ?> />
 					<label for="minat-html">HTML</label>
 
-					<input type="checkbox" id="minat-css" name="minat[]" value="CSS" />
+					<input type="checkbox" id="minat-css" name="minat[]" value="CSS" <?= in_array("CSS", $contactOldInput["minat"] ?? [], true) ? "checked" : "" ?> />
 					<label for="minat-css">CSS</label>
 				</div>
 
@@ -401,8 +447,8 @@ switch ($programStudi) {
 
 					<select class="input-form" id="prodi" name="prodi" required>
 						<option value="">-- Pilih Program Studi --</option>
-						<option value="SI">Sistem Informasi</option>
-						<option value="TI">Teknik Informatika</option>
+						<option value="SI" <?= ($contactOldInput["prodi"] ?? "") === "SI" ? "selected" : "" ?>>Sistem Informasi</option>
+						<option value="TI" <?= ($contactOldInput["prodi"] ?? "") === "TI" ? "selected" : "" ?>>Teknik Informatika</option>
 					</select>
 				</div>
 
@@ -415,7 +461,7 @@ switch ($programStudi) {
 						name="pesan"
 						maxlength="300"
 						placeholder="Tulis pesan Anda"
-						required></textarea>
+						required><?= escape($contactOldInput["pesan"] ?? "") ?></textarea>
 				</div>
 
 				<button type="submit">Kirim</button>
@@ -423,19 +469,17 @@ switch ($programStudi) {
 				<p class="form-feedback" data-form-feedback aria-live="polite"></p>
 			</form>
 
-			<?php if (isset($_SESSION["nama"])): ?>
+			<?php if ($contactData): ?>
 				<article id="hasilKontak" class="submission-result" aria-live="polite">
 					<h3>Data Formulir yang Dikirim</h3>
-					<p><strong>Nama Lengkap:</strong> <?= htmlspecialchars($_SESSION["nama"] ?? "", ENT_QUOTES, "UTF-8") ?></p>
-					<p><strong>Email:</strong> <?= htmlspecialchars($_SESSION["email"] ?? "", ENT_QUOTES, "UTF-8") ?></p>
-					<p><strong>Semester:</strong> <?= htmlspecialchars($_SESSION["semester"] ?? "", ENT_QUOTES, "UTF-8") ?></p>
-					<p><strong>Tanggal Kunjungan:</strong> <?= htmlspecialchars($_SESSION["tanggal"] ?? "", ENT_QUOTES, "UTF-8") ?></p>
-					<p><strong>Jenis Pesan:</strong> <?= htmlspecialchars($_SESSION["jenis_pesan"] ?? "", ENT_QUOTES, "UTF-8") ?></p>
-					<p><strong>Topik yang Diminati:</strong>
-						<?= htmlspecialchars(implode(", ", $_SESSION["minat"] ?? []), ENT_QUOTES, "UTF-8") ?>
-					</p>
-					<p><strong>Program Studi:</strong> <?= htmlspecialchars($_SESSION["prodi"] ?? "", ENT_QUOTES, "UTF-8") ?></p>
-					<p><strong>Pesan:</strong> <?= nl2br(htmlspecialchars($_SESSION["pesan"] ?? "", ENT_QUOTES, "UTF-8")) ?></p>
+					<p><strong>Nama Lengkap:</strong> <?= escape($contactData["nama"]) ?></p>
+					<p><strong>Email:</strong> <?= escape($contactData["email"]) ?></p>
+					<p><strong>Semester:</strong> <?= escape($contactData["semester"]) ?></p>
+					<p><strong>Tanggal Kunjungan:</strong> <?= escape($contactData["tanggal"]) ?></p>
+					<p><strong>Jenis Pesan:</strong> <?= escape($contactData["jenis_pesan"]) ?></p>
+					<p><strong>Topik yang Diminati:</strong> <?= escape(implode(", ", $contactData["minat"])) ?></p>
+					<p><strong>Program Studi:</strong> <?= escape($contactData["prodi"]) ?></p>
+					<p><strong>Pesan:</strong> <?= nl2br(escape($contactData["pesan"])) ?></p>
 				</article>
 			<?php endif; ?>
 		</section>
@@ -446,53 +490,6 @@ switch ($programStudi) {
 	</footer>
 	<script src="script.js"></script>
 
-	<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('form-rencana-kegiatan');
-    const errorBox = document.getElementById('js-error-message');
-
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            let errors = [];
-
-            // Regresi data input
-            const nama = document.getElementById('nama_kegiatan').value.trim();
-            const kategori = document.getElementById('kategori_kegiatan').value;
-            const tanggal = document.getElementById('tanggal_pelaksanaan').value;
-            const lokasi = document.getElementById('lokasi_kegiatan').value.trim();
-            const deskripsi = document.getElementById('deskripsi_kegiatan').value.trim();
-
-            // Validasi input kosong
-            if (nama === '') {
-                errors.push('Nama Kegiatan wajib diisi.');
-            }
-            if (kategori === '') {
-                errors.push('Kategori Kegiatan wajib dipilih.');
-            }
-            if (tanggal === '') {
-                errors.push('Tanggal Pelaksanaan wajib diisi.');
-            }
-            if (lokasi === '') {
-                errors.push('Lokasi Kegiatan wajib diisi.');
-            }
-            if (deskripsi === '') {
-                errors.push('Deskripsi Kegiatan wajib diisi.');
-            }
-
-            // Tampilkan error jika validasi JS gagal
-            if (errors.length > 0) {
-                e.preventDefault(); // Batalkan pengiriman form
-                errorBox.style.display = 'block';
-                errorBox.innerHTML = '<ul style="margin:0; padding-left:20px;">' + 
-                    errors.map(err => `<li>${err}</li>`).join('') + 
-                    '</ul>';
-            } else {
-                errorBox.style.display = 'none';
-            }
-        });
-    }
-});
-</script>
 </body>
 
 </html>

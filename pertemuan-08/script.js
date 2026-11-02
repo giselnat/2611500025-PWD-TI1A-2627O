@@ -126,3 +126,63 @@ contactForms.forEach((contactForm) => {
     }
   });
 });
+
+const activityForm = document.querySelector(
+  'form[data-validation="rencana"]',
+);
+
+if (activityForm) {
+  const errorBox = activityForm.querySelector("#js-error-message");
+  const activityFields = {
+    nama: activityForm.elements.namedItem("nama_kegiatan"),
+    kategori: activityForm.elements.namedItem("kategori_kegiatan"),
+    tanggal: activityForm.elements.namedItem("tanggal_pelaksanaan"),
+    lokasi: activityForm.elements.namedItem("lokasi_kegiatan"),
+    deskripsi: activityForm.elements.namedItem("deskripsi_kegiatan"),
+  };
+
+  const clearErrors = () => {
+    if (errorBox) {
+      errorBox.textContent = "";
+      errorBox.className = "form-feedback";
+    }
+  };
+
+  activityForm.addEventListener("submit", (event) => {
+    const errors = [];
+
+    if (activityFields.nama.value.trim().length < 3) {
+      errors.push("Nama kegiatan minimal 3 karakter.");
+    }
+    if (!activityFields.kategori.value) {
+      errors.push("Pilih kategori kegiatan.");
+    }
+    if (!activityFields.tanggal.value) {
+      errors.push("Tanggal pelaksanaan wajib diisi.");
+    }
+    if (!activityFields.lokasi.value.trim()) {
+      errors.push("Lokasi kegiatan wajib diisi.");
+    }
+    if (activityFields.deskripsi.value.trim().length < 10) {
+      errors.push("Deskripsi kegiatan minimal 10 karakter.");
+    }
+
+    if (errors.length > 0) {
+      event.preventDefault();
+      if (errorBox) {
+        const list = document.createElement("ul");
+        errors.forEach((message) => {
+          const item = document.createElement("li");
+          item.textContent = message;
+          list.append(item);
+        });
+        errorBox.replaceChildren(list);
+        errorBox.className = "form-feedback-error";
+      }
+    }
+  });
+
+  activityForm.addEventListener("input", clearErrors);
+  activityForm.addEventListener("change", clearErrors);
+  activityForm.addEventListener("reset", clearErrors);
+}
