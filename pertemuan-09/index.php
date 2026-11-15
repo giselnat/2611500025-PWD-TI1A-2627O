@@ -1,17 +1,21 @@
 <?php
 session_start();
 
-function bersihkan($teks) 
-{
- return htmlspecialchars($teks["nama"] ??"", ENT_QUOTES, "UTF-8");
-}
+include("fungsi.php");
 
-echo bersihkan("<h1>hai disana</h1>");
+echo "<h1>hai disana</h1>";
+echo bersihkan ("<style>"
+        *{
+		  font-weight: bolder;
+		}
+		</style>");
 echo "<script>
         alert('hai');
         </script>";
 echo bersihkan("<h1>hai disana</h1>");
-echo bersihkan(["nama" => "<script>alert('hai');</script>"]);
+echo bersihkan("script>
+        alert('hai');
+		</script>");"
 
 function postString($key)
 {
@@ -476,21 +480,22 @@ switch ($programStudi) {
 				<p class="form-feedback" data-form-feedback aria-live="polite"></p>
 			</form>
 
-			<?php if ($contactData): ?>
+			<?php if (isset($_SESSION["nama"])): ?>
 				<article id="hasilKontak" class="submission-result" aria-live="polite">
 					<h3>Data Formulir yang Dikirim</h3>
-					<p><strong>Nama Lengkap:</strong> <?= escape($contactData["nama"]) ?></p>
-					<p><strong>Email:</strong> <?= escape($contactData["email"]) ?></p>
-					<p><strong>Semester:</strong> <?= escape($contactData["semester"]) ?></p>
-					<p><strong>Tanggal Kunjungan:</strong> <?= escape($contactData["tanggal"]) ?></p>
-					<p><strong>Jenis Pesan:</strong> <?= escape($contactData["jenis_pesan"]) ?></p>
-					<p><strong>Topik yang Diminati:</strong> <?= escape(implode(", ", $contactData["minat"])) ?></p>
-					<p><strong>Program Studi:</strong> <?= escape($contactData["prodi"]) ?></p>
-					<p><strong>Pesan:</strong> <?= nl2br(escape($contactData["pesan"])) ?></p>
+					<p><strong>Nama Lengkap:</strong> <?= bersihkan($contactData["nama"]) ?></p>
+					<p><strong>Email:</strong> <?= bersihkan($contactData["email"]) ?></p>
+					<p><strong>Semester:</strong> <?= bersihkan($contactData["semester"]) ?></p>
+					<p><strong>Tanggal Kunjungan:</strong> <?= bersihkan($contactData["tanggal"]) ?></p>
+					<p><strong>Jenis Pesan:</strong> <?= bersihkan($contactData["jenis_pesan"]) ?></p>
+					<p><strong>Topik yang Diminati:</strong> <?= bersihkan(implode(", ", $contactData["minat"])) ?></p>
+					<p><strong>Program Studi:</strong> <?= bersihkan($contactData["prodi"]) ?></p>
+					<p><strong>Pesan:</strong> <?= nl2br(bersihkan($contactData["pesan"])) ?></p>
 				</article>
 			<?php endif; ?>
 		</section>
 	</main>
+
 
 	<footer>
 		<p>&copy; <?= date("Y") ?> <?php echo $namaMahasiswa; ?> [<?= $nim ?>]</p>
