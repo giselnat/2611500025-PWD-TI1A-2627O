@@ -1,1 +1,3 @@
 # pertemuan-09
+1. menyalin artefak bahan pertemuan 8, sebagai baselane pertemuan 9 dan menguji tampilan http://localhost/pwd/2627/ti1a/2611500025-PWD-TI1A-2627O/pertemuan-09/ disana hasilnya masih sama dengan artefak bahan pertemuan 08
+2. Membuat fungsi bersihkan ($teks) untuk membatalkan eksekusi skript html atau javascript sebelum output dihasilakn. Tanpa fungsi bersihkan (), output akan dieksekusi contihnya : <hi>teks</h1> membuat teks menjadi heading dengan fungsi bersihkan (), output menjadi <hi>teks</h1> tanpa membuat teks menjadi heading.

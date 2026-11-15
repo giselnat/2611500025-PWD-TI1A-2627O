@@ -1,10 +1,17 @@
 <?php
 session_start();
 
-function escape($value)
+function bersihkan($teks) 
 {
-	return htmlspecialchars((string) $value, ENT_QUOTES, "UTF-8");
+ return htmlspecialchars($teks["nama"] ??"", ENT_QUOTES, "UTF-8");
 }
+
+echo bersihkan("<h1>hai disana</h1>");
+echo "<script>
+        alert('hai');
+        </script>";
+echo bersihkan("<h1>hai disana</h1>");
+echo bersihkan(["nama" => "<script>alert('hai');</script>"]);
 
 function postString($key)
 {
