@@ -4,8 +4,8 @@ session_start();
 include("fungsi.php");
 
 echo "<h1>hai disana</h1>";
-echo bersihkan ("<style>"
-        *{
+echo bersihkan ("<style>
+        * {
 		  font-weight: bolder;
 		}
 		</style>");
@@ -118,17 +118,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$_SESSION["contact_errors"] = $errors;
 			$_SESSION["contact_old_input"] = $contact;
 		} else {
+			# sebelum pertemuan 8
 			$_SESSION["contact_data"] = $contact;
-			$_SESSION["nama"] = $contact["nama"];
+			/* $_SESSION["nama"] = $contact["nama"];
 			$_SESSION["email"] = $contact["email"];
 			$_SESSION["semester"] = $contact["semester"];
 			$_SESSION["tanggal"] = $contact["tanggal"];
 			$_SESSION["jenis_pesan"] = $contact["jenis_pesan"];
 			$_SESSION["minat"] = $contact["minat"];
 			$_SESSION["prodi"] = $contact["prodi"];
-			$_SESSION["pesan"] = $contact["pesan"];
+			$_SESSION["pesan"] = $contact["pesan"]; */
 			unset($_SESSION["contact_errors"], $_SESSION["contact_old_input"]);
 		}
+
+		# pertemuan 9
+// Menyimpan semua data formulir ke dalam SATU ARRAY di session.
+$_SESSION["form_data"] = [
+    "nama"        => $nama,
+    "email"       => $email,
+    "semester"    => $semesterForm,
+    "tanggal"     => $tanggal,
+    "jenis_pesan" => $jenisPesan,
+    "minat"       => $minat,
+    "prodi"       => $prodi,
+    "pesan"       => $pesan,
+];
 
 		header("Location: index.php#contact");
 		exit;
@@ -480,18 +494,20 @@ switch ($programStudi) {
 				<p class="form-feedback" data-form-feedback aria-live="polite"></p>
 			</form>
 
-			<?php if (isset($_SESSION["nama"])): ?>
-				<article id="hasilKontak" class="submission-result" aria-live="polite">
-					<h3>Data Formulir yang Dikirim</h3>
-					<p><strong>Nama Lengkap:</strong> <?= bersihkan($contactData["nama"]) ?></p>
-					<p><strong>Email:</strong> <?= bersihkan($contactData["email"]) ?></p>
-					<p><strong>Semester:</strong> <?= bersihkan($contactData["semester"]) ?></p>
-					<p><strong>Tanggal Kunjungan:</strong> <?= bersihkan($contactData["tanggal"]) ?></p>
-					<p><strong>Jenis Pesan:</strong> <?= bersihkan($contactData["jenis_pesan"]) ?></p>
-					<p><strong>Topik yang Diminati:</strong> <?= bersihkan(implode(", ", $contactData["minat"])) ?></p>
-					<p><strong>Program Studi:</strong> <?= bersihkan($contactData["prodi"]) ?></p>
-					<p><strong>Pesan:</strong> <?= nl2br(bersihkan($contactData["pesan"])) ?></p>
-				</article>
+			<?php if (isset($_SESSION["form_data"])): ?>
+    <article id="hasilKontak" class="submission-result" aria-live="polite">
+        <h3>Data Formulir yang Dikirim</h3>
+        <p><strong>Nama Lengkap:</strong> <?= bersihkan($_SESSION["form_data"]["nama"]) ?></p>
+        <p><strong>Email:</strong> <?= bersihkan($_SESSION["email"]) ?></p>
+        <p><strong>Semester:</strong> <?= bersihkan($_SESSION["semester"]) ?></p>
+        <p><strong>Tanggal Kunjungan:</strong> <?= bersihkan($_SESSION["tanggal"]) ?></p>
+        <p><strong>Jenis Pesan:</strong> <?= bersihkan($_SESSION["jenis_pesan"]) ?></p>
+        <p><strong>Topik yang Diminati:</strong>
+            <?= bersihkan(implode(", ", $_SESSION["minat"])) ?>
+        </p>
+        <p><strong>Program Studi:</strong> <?= bersihkan($_SESSION["prodi"]) ?></p>
+        <p><strong>Pesan:</strong> <?= nl2br(bersihkan($_SESSION["pesan"])) ?></p>
+    </article>
 			<?php endif; ?>
 		</section>
 	</main>

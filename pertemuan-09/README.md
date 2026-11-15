@@ -2,3 +2,4 @@
 1. menyalin artefak bahan pertemuan 8, sebagai baselane pertemuan 9 dan menguji tampilan http://localhost/pwd/2627/ti1a/2611500025-PWD-TI1A-2627O/pertemuan-09/ disana hasilnya masih sama dengan artefak bahan pertemuan 08
 2. Membuat fungsi bersihkan ($teks) untuk membatalkan eksekusi skript html atau javascript sebelum output dihasilakn. Tanpa fungsi bersihkan (), output akan dieksekusi contihnya : <hi>teks</h1> membuat teks menjadi heading dengan fungsi bersihkan (), output menjadi <hi>teks</h1> tanpa membuat teks menjadi heading.
 3. Membuat file dengan nama fungsi.php, berisi fungsu bersihkan() yang dipindah dari index.php pada index.php baris fungsi diganti dengan include("fungsi.php"); setelah pengujian, hasilnya etap saya antara penulisan fungsi bersihkan() langsung di index.php maupun setelah fungsi bersihkan() dipindahkan le fungsi.php.
+4. Membuat 1 session array assosiatif untuk menampung data dari form ($\_SESSION["form_data"]) dan outputnya dengan for each
