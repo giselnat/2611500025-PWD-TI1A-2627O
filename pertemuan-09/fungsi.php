@@ -1,5 +1,10 @@
 <?php
 function bersihkan($teks) 
 {
- return htmlspecialchars($teks["nama"] ??"", ENT_QUOTES, "UTF-8");
+ return htmlspecialchars($teks ??"", ENT_QUOTES, "UTF-8");
+}
+
+function tebal($teks)
+{
+    return "<strong>" . $teks . "</strong>";
 }

@@ -4,18 +4,14 @@ session_start();
 include("fungsi.php");
 
 echo "<h1>hai disana</h1>";
-echo bersihkan ("<style>
-        * {
-		  font-weight: bolder;
-		}
-		</style>");
 echo "<script>
-        alert('hai');
-        </script>";
+alert('hai');
+</script>";
 echo bersihkan("<h1>hai disana</h1>");
-echo bersihkan("script>
-        alert('hai');
-		</script>");"
+echo bersihkan ("<script>
+alert('hai');
+</script>");
+
 
 function postString($key)
 {
@@ -82,8 +78,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			"semester" => postString("semester"),
 			"tanggal" => postString("tanggal"),
 			"jenis_pesan" => postString("jenis_pesan"),
-			"minat" => array_values(array_filter($interests, "is_string")),
 			"prodi" => postString("prodi"),
+			"minat" => array_values(array_filter($interests, "is_string")),
 			"pesan" => postString("pesan"),
 		];
 		$errors = [];
@@ -118,31 +114,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 			$_SESSION["contact_errors"] = $errors;
 			$_SESSION["contact_old_input"] = $contact;
 		} else {
-			# sebelum pertemuan 8
-			$_SESSION["contact_data"] = $contact;
-			/* $_SESSION["nama"] = $contact["nama"];
-			$_SESSION["email"] = $contact["email"];
-			$_SESSION["semester"] = $contact["semester"];
-			$_SESSION["tanggal"] = $contact["tanggal"];
-			$_SESSION["jenis_pesan"] = $contact["jenis_pesan"];
-			$_SESSION["minat"] = $contact["minat"];
-			$_SESSION["prodi"] = $contact["prodi"];
-			$_SESSION["pesan"] = $contact["pesan"]; */
+			$_SESSION["form_data"] = $contact;
 			unset($_SESSION["contact_errors"], $_SESSION["contact_old_input"]);
 		}
-
-		# pertemuan 9
-// Menyimpan semua data formulir ke dalam SATU ARRAY di session.
-$_SESSION["form_data"] = [
-    "nama"        => $nama,
-    "email"       => $email,
-    "semester"    => $semesterForm,
-    "tanggal"     => $tanggal,
-    "jenis_pesan" => $jenisPesan,
-    "minat"       => $minat,
-    "prodi"       => $prodi,
-    "pesan"       => $pesan,
-];
 
 		header("Location: index.php#contact");
 		exit;
@@ -166,20 +140,17 @@ unset(
 	$_SESSION["form_errors"]
 );
 $rkmList = $_SESSION["rkm_list"] ?? [];
-$contactData = $_SESSION["contact_data"] ?? null;
-if (!$contactData && isset($_SESSION["nama"])) {
-	$contactData = [
-		"nama" => $_SESSION["nama"],
-		"email" => $_SESSION["email"] ?? "",
-		"semester" => $_SESSION["semester"] ?? "",
-		"tanggal" => $_SESSION["tanggal"] ?? "",
-		"jenis_pesan" => $_SESSION["jenis_pesan"] ?? "",
-		"minat" => $_SESSION["minat"] ?? [],
-		"prodi" => $_SESSION["prodi"] ?? "",
-		"pesan" => $_SESSION["pesan"] ?? "",
-	];
-	$contactData["minat"] = is_array($contactData["minat"]) ? $contactData["minat"] : [];
-}
+$contactData = $_SESSION["form_data"] ?? null;
+$contactLabels = [
+	"nama" => "Nama Lengkap",
+	"email" => "Email",
+	"semester" => "Semester",
+	"tanggal" => "Tanggal Kunjungan",
+	"jenis_pesan" => "Jenis Pesan",
+	"prodi" => "Program Studi",
+	"minat" => "Topik yang Diminati",
+	"pesan" => "Pesan",
+];
 
 // Mengamankan data sebelum ditampilkan kembali ke halaman HTML.
 // P6: PHP dasar dan pemrograman sisi peladen
@@ -263,6 +234,7 @@ switch ($programStudi) {
 	<main>
 		<section id="home">
 			<h2>Selamat Datang</h2>
+			<h3>hai disana</h3>
 			<p>Halo, saya <strong><?php echo $namaMahasiswa; ?></strong>. Saya sedang mempelajari matakuliah <strong><?php print NAMA_MATA_KULIAH; ?></strong> pada tahun akademik <?php echo $tahunAkademik; ?>.</p>
 
 			<img src="img/foto-profil.jpg" alt="Foto profil Nama Mahasiswa" />
@@ -331,7 +303,7 @@ switch ($programStudi) {
 				<div class="form-feedback-error" role="alert">
 					<ul>
 						<?php foreach ($rkmErrors as $error): ?>
-							<li><?= escape($error) ?></li>
+							<li><?= bersihkan($error) ?></li>
 						<?php endforeach; ?>
 					</ul>
 				</div>
@@ -341,28 +313,28 @@ switch ($programStudi) {
 				<input type="hidden" name="form_type" value="rencana">
 				<div class="form-group">
 					<label for="nama_kegiatan">Nama Kegiatan</label>
-					<input class="input-form" type="text" name="nama_kegiatan" id="nama_kegiatan" minlength="3" required value="<?= escape($rkmOldInput["nama_kegiatan"] ?? "") ?>">
+					<input class="input-form" type="text" name="nama_kegiatan" id="nama_kegiatan" minlength="3" required value="<?= bersihkan($rkmOldInput["nama_kegiatan"] ?? "") ?>">
 				</div>
 				<div class="form-group">
 					<label for="kategori_kegiatan">Kategori Kegiatan</label>
 					<select class="input-form" name="kategori_kegiatan" id="kategori_kegiatan" required>
 						<option value="">-- Pilih Kategori --</option>
 						<?php foreach (["Akademik", "Organisasi", "Olahraga", "Seni & Budaya", "Pengabdian Masyarakat"] as $category): ?>
-							<option value="<?= escape($category) ?>" <?= ($rkmOldInput["kategori_kegiatan"] ?? "") === $category ? "selected" : "" ?>><?= escape($category) ?></option>
+							<option value="<?= bersihkan($category) ?>" <?= ($rkmOldInput["kategori_kegiatan"] ?? "") === $category ? "selected" : "" ?>><?= bersihkan($category) ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
 				<div class="form-group">
 					<label for="tanggal_pelaksanaan">Tanggal Pelaksanaan</label>
-					<input class="input-form" type="date" name="tanggal_pelaksanaan" id="tanggal_pelaksanaan" required value="<?= escape($rkmOldInput["tanggal_pelaksanaan"] ?? "") ?>">
+					<input class="input-form" type="date" name="tanggal_pelaksanaan" id="tanggal_pelaksanaan" required value="<?= bersihkan($rkmOldInput["tanggal_pelaksanaan"] ?? "") ?>">
 				</div>
 				<div class="form-group">
 					<label for="lokasi_kegiatan">Lokasi Kegiatan</label>
-					<input class="input-form" type="text" name="lokasi_kegiatan" id="lokasi_kegiatan" required value="<?= escape($rkmOldInput["lokasi_kegiatan"] ?? "") ?>">
+					<input class="input-form" type="text" name="lokasi_kegiatan" id="lokasi_kegiatan" required value="<?= bersihkan($rkmOldInput["lokasi_kegiatan"] ?? "") ?>">
 				</div>
 				<div class="form-group">
 					<label for="deskripsi_kegiatan">Deskripsi Kegiatan</label>
-					<textarea class="input-form" name="deskripsi_kegiatan" id="deskripsi_kegiatan" rows="5" minlength="10" required><?= escape($rkmOldInput["deskripsi_kegiatan"] ?? "") ?></textarea>
+					<textarea class="input-form" name="deskripsi_kegiatan" id="deskripsi_kegiatan" rows="5" minlength="10" required><?= bersihkan($rkmOldInput["deskripsi_kegiatan"] ?? "") ?></textarea>
 				</div>
 				<p id="js-error-message" class="form-feedback" aria-live="polite"></p>
 				<button type="submit">Kirim Rencana</button>
@@ -376,11 +348,11 @@ switch ($programStudi) {
 				<div class="submission-result">
 					<?php foreach ($rkmList as $index => $activity): ?>
 						<article>
-							<h4><?= escape($activity["nama_kegiatan"]) ?></h4>
-							<p><strong>Kategori:</strong> <?= escape($activity["kategori_kegiatan"]) ?></p>
-							<p><strong>Tanggal:</strong> <?= escape($activity["tanggal_pelaksanaan"]) ?></p>
-							<p><strong>Lokasi:</strong> <?= escape($activity["lokasi_kegiatan"]) ?></p>
-							<p><strong>Deskripsi:</strong> <?= nl2br(escape($activity["deskripsi_kegiatan"])) ?></p>
+							<h4><?= bersihkan($activity["nama_kegiatan"]) ?></h4>
+							<p><strong>Kategori:</strong> <?= bersihkan($activity["kategori_kegiatan"]) ?></p>
+							<p><strong>Tanggal:</strong> <?= bersihkan($activity["tanggal_pelaksanaan"]) ?></p>
+							<p><strong>Lokasi:</strong> <?= bersihkan($activity["lokasi_kegiatan"]) ?></p>
+							<p><strong>Deskripsi:</strong> <?= nl2br(bersihkan($activity["deskripsi_kegiatan"])) ?></p>
 						</article>
 					<?php endforeach; ?>
 				</div>
@@ -392,7 +364,7 @@ switch ($programStudi) {
 			<?php if ($formErrors): ?>
 				<div class="form-feedback-error" role="alert">
 					<?php foreach ($formErrors as $error): ?>
-						<p><?= escape($error) ?></p>
+						<p><?= bersihkan($error) ?></p>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
@@ -406,7 +378,7 @@ switch ($programStudi) {
 				<div class="form-feedback-error" role="alert">
 					<ul>
 						<?php foreach ($contactErrors as $error): ?>
-							<li><?= escape($error) ?></li>
+							<li><?= bersihkan($error) ?></li>
 						<?php endforeach; ?>
 					</ul>
 				</div>
@@ -426,25 +398,25 @@ switch ($programStudi) {
 						minlength="3"
 						maxlength="50"
 						required
-						value="<?= escape($contactOldInput["nama"] ?? "") ?>" />
+						value="<?= bersihkan($contactOldInput["nama"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<label for="email">Email</label><br />
 
-					<input class="input-form" type="email" id="email" name="email" placeholder="nama@email.com" required value="<?= escape($contactOldInput["email"] ?? "") ?>" />
+					<input class="input-form" type="email" id="email" name="email" placeholder="nama@email.com" required value="<?= bersihkan($contactOldInput["email"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<label for="semester">Semester</label><br />
 
-					<input class="input-form" type="number" id="semester" name="semester" min="1" max="14" required value="<?= escape($contactOldInput["semester"] ?? "") ?>" />
+					<input class="input-form" type="number" id="semester" name="semester" min="1" max="14" required value="<?= bersihkan($contactOldInput["semester"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
 					<label for="tanggal">Tanggal Kunjungan</label><br />
 
-					<input class="input-form" type="date" id="tanggal" name="tanggal" required value="<?= escape($contactOldInput["tanggal"] ?? "") ?>" />
+					<input class="input-form" type="date" id="tanggal" name="tanggal" required value="<?= bersihkan($contactOldInput["tanggal"] ?? "") ?>" />
 				</div>
 
 				<div class="form-group">
@@ -486,7 +458,7 @@ switch ($programStudi) {
 						name="pesan"
 						maxlength="300"
 						placeholder="Tulis pesan Anda"
-						required><?= escape($contactOldInput["pesan"] ?? "") ?></textarea>
+						required><?= bersihkan($contactOldInput["pesan"] ?? "") ?></textarea>
 				</div>
 
 				<button type="submit">Kirim</button>
@@ -494,24 +466,19 @@ switch ($programStudi) {
 				<p class="form-feedback" data-form-feedback aria-live="polite"></p>
 			</form>
 
-			<?php if (isset($_SESSION["form_data"])): ?>
-    <article id="hasilKontak" class="submission-result" aria-live="polite">
-        <h3>Data Formulir yang Dikirim</h3>
-        <p><strong>Nama Lengkap:</strong> <?= bersihkan($_SESSION["form_data"]["nama"]) ?></p>
-        <p><strong>Email:</strong> <?= bersihkan($_SESSION["email"]) ?></p>
-        <p><strong>Semester:</strong> <?= bersihkan($_SESSION["semester"]) ?></p>
-        <p><strong>Tanggal Kunjungan:</strong> <?= bersihkan($_SESSION["tanggal"]) ?></p>
-        <p><strong>Jenis Pesan:</strong> <?= bersihkan($_SESSION["jenis_pesan"]) ?></p>
-        <p><strong>Topik yang Diminati:</strong>
-            <?= bersihkan(implode(", ", $_SESSION["minat"])) ?>
-        </p>
-        <p><strong>Program Studi:</strong> <?= bersihkan($_SESSION["prodi"]) ?></p>
-        <p><strong>Pesan:</strong> <?= nl2br(bersihkan($_SESSION["pesan"])) ?></p>
-    </article>
+			<?php if ($contactData !== null): ?>
+				<article id="hasilKontak" class="submission-result" aria-live="polite">
+					<h3>Data Formulir yang Dikirim</h3>
+					<?php foreach ($contactData as $field => $value): ?>
+						<p>
+							<strong><?= bersihkan($contactLabels[$field] ?? $field) ?>:</strong>
+							<?= nl2br(bersihkan(is_array($value) ? implode(", ", $value) : $value)) ?>
+						</p>
+					<?php endforeach; ?>
+				</article>
 			<?php endif; ?>
 		</section>
 	</main>
-
 
 	<footer>
 		<p>&copy; <?= date("Y") ?> <?php echo $namaMahasiswa; ?> [<?= $nim ?>]</p>
