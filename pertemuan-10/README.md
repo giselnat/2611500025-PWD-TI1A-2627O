@@ -111,3 +111,6 @@ INSERT INTO tbl_kontak_nim
 (nama, email, semester, tanggal, jenis_pesan, minat, prodi, pesan)
 VALUES
 ('Andi', 'andi@example.com', 2, '2026-11-15', 'pertanyaan', 'HTML, CSS', 'TI', 'Saya ingin belajar pemrograman web.');
+# F.3. Memeriksa Data Menggunakan Fasilitas Browse
+
+- **Hasil Pemeriksaan:** Seluruh data awal dari langkah F.1 dan F.2 telah ditampilkan pada tab **Browse** tabel `tbl_kontak_nim`. Nilai setiap atribut lengkap sesuai input, kolom `id` terisi secara otomatis (`AUTO_INCREMENT`), dan kolom `minat` ditampilkan sebagai teks dengan benar.
