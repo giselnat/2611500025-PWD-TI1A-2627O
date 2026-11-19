@@ -56,3 +56,30 @@ formulir pembuatan tabel menampilkan nama tabel yang benar dan menyediakan sembi
 - **Nama Tabel:** `tbl_kontak_nim`
 - **Jumlah Kolom:** 9 kolom (`id`, `nama`, `email`, `semester`, `tanggal`, `jenis_pesan`, `minat`, `prodi`, `pesan`).
 - **Status Pengujian:** Struktur tabel berhasil disimpan di phpMyAdmin. Kolom `id` sudah ditetapkan sebagai `PRIMARY KEY` dengan `AUTO_INCREMENT`, serta seluruh nama atribut, tipe data, dan panjang `VARCHAR` telah sesuai dengan rancangan.
+
+## E.5. Mengenal Perintah DDL (`CREATE DATABASE` dan `CREATE TABLE`)
+
+Perintah DDL (*Data Definition Language*) merupakan bentuk query SQL asli dari langkah pembuatan basis data dan tabel yang sebelumnya dilakukan melalui antarmuka klik di phpMyAdmin (E.2 sampai E.4):
+
+1. **`CREATE DATABASE db_pwd_2611500025;`** — Mewakili proses pembuatan basis data baru (langkah E.2).
+2. **`USE db_pwd_nim;`** — Mewakili proses pemilihan/pengaktifan basis data sebelum membuat tabel (langkah E.3).
+3. **`CREATE TABLE tbl_kontak_2611500025 (...);`** — Mewakili proses pembuatan tabel beserta 9 atribut, tipe data, panjang karakter, `PRIMARY KEY`, dan `AUTO_INCREMENT` (langkah E.3 dan E.4).
+
+### Perintah SQL Lengkap:
+
+```sql
+CREATE DATABASE db_pwd_nim;
+
+USE db_pwd_nim;
+
+CREATE TABLE tbl_kontak_nim (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nama VARCHAR(50),
+    email VARCHAR(255),
+    semester TINYINT,
+    tanggal DATE,
+    jenis_pesan VARCHAR(20),
+    minat VARCHAR(50),
+    prodi VARCHAR(2),
+    pesan VARCHAR(300)
+);
