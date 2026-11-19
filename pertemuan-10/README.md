@@ -45,4 +45,7 @@ Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan 
 
 - Layanan Apache dan MySQL pada Laragon telah berjalan.
 - Halaman phpMyAdmin (`http://localhost/phpmyadmin`) berhasil dibuka dan menampilkan antarmuka pengelolaan basis data MySQL.
+## E.2. Membuat Basis Data
 
+- **Nama Basis Data:** `db_pwd_2611500025`
+- **Status Pengujian:** Basis data berhasil dibuat melalui menu Databases di phpMyAdmin menggunakan collation bawaan dan sudah muncul pada daftar basis data.
