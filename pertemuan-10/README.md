@@ -1,5 +1,5 @@
 # Pertemuan 10 
-Nama basis data : db_pwd_2611500025
+Nama Basis Data : db_pwd_2611500025
 Nama tabel : tbl_kontak_2611500025
 1. menyalin artefak pertemuan 9, sebagai baselane ke pertemuan 10, dan hasilnya masih sama dengan artefak pertemuan ke 9
 2. Membuka PhpMyadmin, PhpMyadmin dapat dibuka dan digunakan
@@ -20,7 +20,7 @@ Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan 
 | 4 | tanggal | DATE | Menyimpan tanggal kunjungan. |
 | 5 | jenis_pesan | VARCHAR(20) | Menyimpan jenis pesan (pertanyaan/saran). |
 | 6 | minat | VARCHAR(50) | Menyimpan pilihan minat sebagai teks. |
-| 7 | prodi | VARCHAR(2) | Menyimpan kode program studi (TI). |
+| 7 | program studi | VARCHAR(2) | Menyimpan kode program studi (TI). |
 | 8 | pesan | VARCHAR(300) | Menyimpan isi pesan, maksimal 300 karakter. |
 ## D.3. Primary Key dan AUTO_INCREMENT
 
