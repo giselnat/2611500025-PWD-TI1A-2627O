@@ -49,4 +49,10 @@ Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan 
 
 - **Nama Basis Data:** `db_pwd_2611500025`
 - **Status Pengujian:** Basis data berhasil dibuat melalui menu Databases di phpMyAdmin menggunakan collation bawaan dan sudah muncul pada daftar basis data.
+## E.3. Membuat Basis Data
 formulir pembuatan tabel menampilkan nama tabel yang benar dan menyediakan sembilan kolom untuk diisi.
+## E.4. Mengisi Struktur Sembilan Kolom
+
+- **Nama Tabel:** `tbl_kontak_nim`
+- **Jumlah Kolom:** 9 kolom (`id`, `nama`, `email`, `semester`, `tanggal`, `jenis_pesan`, `minat`, `prodi`, `pesan`).
+- **Status Pengujian:** Struktur tabel berhasil disimpan di phpMyAdmin. Kolom `id` sudah ditetapkan sebagai `PRIMARY KEY` dengan `AUTO_INCREMENT`, serta seluruh nama atribut, tipe data, dan panjang `VARCHAR` telah sesuai dengan rancangan.
