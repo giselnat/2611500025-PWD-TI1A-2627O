@@ -83,3 +83,20 @@ CREATE TABLE tbl_kontak_nim (
     prodi VARCHAR(2),
     pesan VARCHAR(300)
 );
+## E.6. Memeriksa Struktur Tabel (`DESCRIBE`)
+
+Pemeriksaan struktur akhir tabel `tbl_kontak_nim` dilakukan melalui tab **Structure** dan perintah SQL `DESCRIBE tbl_kontak_nim;`:
+
+| Field | Type | Key | Extra |
+|---|---|---|---|
+| id | int | PRI | auto_increment |
+| nama | varchar(50) | | |
+| email | varchar(255) | | |
+| semester | tinyint | | |
+| tanggal | date | | |
+| jenis_pesan | varchar(20) | | |
+| minat | varchar(50) | | |
+| prodi | varchar(2) | | |
+| pesan | varchar(300) | | |
+
+- **Hasil Pemeriksaan:** Seluruh 9 kolom, tipe data, panjang karakter, serta `PRIMARY KEY` dan `AUTO_INCREMENT` pada kolom `id` sudah sesuai rancangan dan siap digunakan pada Bagian F.
