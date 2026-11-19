@@ -27,7 +27,7 @@ Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan 
 - **Atribut:** `id`
 - **Tipe Data:** `INT`
 - **Ketentuan:** `PRIMARY KEY`, `AUTO_INCREMENT`
-- **Keterangan:** Identitas unik otomatis untuk membedakan setiap baris data kontak.
+- **Keterangan:** Identitas unik otomatis untuk membedakan setiap baris data kontak..
 ## D.4. Rancangan Akhir Struktur Tabel (`tbl_kontak_2611500025`)
 
 | No | Atribut | Tipe Data | Ketentuan |
