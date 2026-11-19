@@ -49,3 +49,4 @@ Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan 
 
 - **Nama Basis Data:** `db_pwd_2611500025`
 - **Status Pengujian:** Basis data berhasil dibuat melalui menu Databases di phpMyAdmin menggunakan collation bawaan dan sudah muncul pada daftar basis data.
+formulir pembuatan tabel menampilkan nama tabel yang benar dan menyediakan sembilan kolom untuk diisi.
