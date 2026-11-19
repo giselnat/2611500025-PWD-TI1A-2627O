@@ -102,3 +102,12 @@ Pemeriksaan struktur akhir tabel `tbl_kontak_nim` dilakukan melalui tab **Struct
 - **Hasil Pemeriksaan:** Seluruh 9 kolom, tipe data, panjang karakter, serta `PRIMARY KEY` dan `AUTO_INCREMENT` pada kolom `id` sudah sesuai rancangan dan siap digunakan pada Bagian F.
 ## F.1.
 Mencoba memasukkan data, dan berhasil. Dan memeriksa kembali nilai yang diisikan pada setiap atribut.
+## F.2. Mengenal Perintah SQL `INSERT` (DML)
+
+Perintah DML (*Data Manipulation Language*) `INSERT INTO` digunakan untuk menambahkan baris data baru ke tabel melalui tab SQL di phpMyAdmin:
+
+```sql
+INSERT INTO tbl_kontak_nim
+(nama, email, semester, tanggal, jenis_pesan, minat, prodi, pesan)
+VALUES
+('Andi', 'andi@example.com', 2, '2026-11-15', 'pertanyaan', 'HTML, CSS', 'TI', 'Saya ingin belajar pemrograman web.');
