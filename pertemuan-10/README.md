@@ -100,3 +100,5 @@ Pemeriksaan struktur akhir tabel `tbl_kontak_nim` dilakukan melalui tab **Struct
 | pesan | varchar(300) | | |
 
 - **Hasil Pemeriksaan:** Seluruh 9 kolom, tipe data, panjang karakter, serta `PRIMARY KEY` dan `AUTO_INCREMENT` pada kolom `id` sudah sesuai rancangan dan siap digunakan pada Bagian F.
+## F.1.
+Mencoba memasukkan data, dan berhasil. Dan memeriksa kembali nilai yang diisikan pada setiap atribut.
