@@ -39,7 +39,7 @@ Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan 
 | 5 | tanggal | DATE | - |
 | 6 | jenis_pesan | VARCHAR(20) | - |
 | 7 | minat | VARCHAR(50) | - |
-| 8 | prodi | VARCHAR(2) | - |
+| 8 | program Studi | VARCHAR(2) | - |
 | 9 | pesan | VARCHAR(300) | - |
 ## E.1. Membuka phpMyAdmin
 
