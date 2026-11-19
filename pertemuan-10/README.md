@@ -9,7 +9,7 @@ sesuai dengan atribut name dan jenis input yang tersedia pada kode yang diberika
 - Kedelapan data tersebut sudah sesuai dengan elemen input yang ada pada bagian formulir Kontak di `pertemuan-10\index.php`.
 - Informasi bagian profil mahasiswa (seperti NIM, nama mahasiswa, dan program studi pada bagian profil) dipastikan tidak dimasukkan sebagai bagian dari data formulir Kontak yang disimpan ke basis data.
 Mencocokkan kedelapan data yang akan disimpan dengan elemen formulir pada pertemuan -10 \index.php .
-Memeriksa kembali kode formulir pada pertemuan - 10 \index.php . Dan memastikan kedua checkbox menggunakan atribut name="minat[]" dan memiliki nilai HTML serta CSS.
+Memeriksa kembali kode formulir pada pertemuan - 10 \index.php , dan memastikan kedua checkbox menggunakan atribut name="minat[]" dan memiliki nilai HTML serta CSS.
 ## Rancangan Atribut dan Tipe Data (`tbl_kontak_2611500025`)
 
 | No | Atribut | Tipe Data | Keterangan |
